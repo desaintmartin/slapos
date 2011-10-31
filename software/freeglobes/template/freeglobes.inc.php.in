@@ -1,0 +1,56 @@
+<?php
+
+$CONFIG['db_host']	=	"%(mysql_host)s";
+$CONFIG['db_login']	=	"%(mysql_user)s";
+$CONFIG['db_pass']	=	"%(mysql_password)s";
+$CONFIG['db_name']	=	"%(mysql_database)s";
+$CONFIG['db_prefix']	=	"fgl";
+$CONFIG['url_rewriting']	=	"0";
+$CONFIG['links']	=	"10";
+$CONFIG['subdirs']	=	"5";
+$CONFIG['cat_defaut']	=	"1";
+$CONFIG['link_votes']	=	"1";
+$CONFIG['use_iplogging']	=	"1";
+$CONFIG['feed_cache_lifetime']	=	"86400";
+$CONFIG['search_minlength']	=	"4";
+$CONFIG['get_meta_tags']	=	"1";
+$CONFIG['mail_confirm']	=	"0";
+$CONFIG['use_antibot']	=	"1";
+$CONFIG['use_pagerank']	=	"0";
+$CONFIG['use_prcache']	=	"0";
+$CONFIG['use_thumbs']	=	"1";
+$CONFIG['rapatrier_thumbs']	=	"1";
+$CONFIG['check_url']	=	"0";
+$CONFIG['theme_dir']	=	"fresh";
+$CONFIG['use_smartycache']	=	"0";
+$CONFIG['smarty_cache_lifetime']	=	"3600";
+$CONFIG['language']	=	"french";
+$CONFIG['max_keywords']	=	"100";
+$CONFIG['site_mail']	=	"slapos@freeglobes.net";
+$CONFIG['site_name']	=	"FreeGlobes By SlapOS";
+$CONFIG['site_url']	=	"";
+$CONFIG['submission_allowed']	=	"1";
+$CONFIG['encoding']	=	"ISO-8859-1";
+$CONFIG['auth_method']	=	"my";
+$CONFIG['database']	=	"mysql";
+$CONFIG['site_description']	=	"Annuaire PHP/MySQL";
+$CONFIG['inform_admin_about_submission']	=	"1";
+$CONFIG['alternate_pr_calculation']	=	"0";
+$CONFIG['boost_time']	=	"1800";
+$CONFIG['boost_time_allopass']	=	"172800";
+$CONFIG['points_per_clic']	=	"2";
+$CONFIG['points_per_vote']	=	"3";
+$CONFIG['points_per_in']	=	"5";
+$CONFIG['points_per_submit']	=	"100";
+$CONFIG['points_needed_for_ad']	=	"200";
+$CONFIG['points_attributed_by_allopass']	=	"500";
+$CONFIG['points_on_subscribe']	=	"500";
+$CONFIG['use_comments']	=	"1";
+$CONFIG['auto_approve_comments']	=	"1";
+$CONFIG['allopass_ID']	=	"8665110";
+$CONFIG['allopass_expiration_time']	=	"86400";
+$CONFIG['inform_user_by_mail']	=	"1";
+$CONFIG['title_submit_min_length']	=	"5";
+$CONFIG['desc_submit_min_length']	=	"45";
+
+?>
