@@ -17,14 +17,15 @@ def setup(args):
   f1 = open(htpasswd_file, 'w+')
   f1.write("admin:OA9zt069mtqn6") #admin/admin
   f1.close()
-
+  os.chmod(htpasswd_file, 0644)
+  
   htaccess_content = "AuthUserFile %ssites/default/.htpasswd\nAuthName “OpenEMR Protected Page”\nAuthType Basic\nRequire valid-user" % htdocs 
   
   for f in [document_htaccess, edi_htaccess, era_htaccess]:
     file  = open(f, 'w+')
     file.write(htaccess_content)
     file.close()
-    os.chmod(f, 0444)
-  
+    os.chmod(f, 0644)
+
 if __name__ == '__main__':
   setup(sys.argv[1:])
