@@ -8,7 +8,6 @@ parts =
   eggs
   instance-recipe-egg
   downloadcache-workaround
-  configure-script
   
 extends =
   http://git.erp5.org/gitweb/slapos.git/blob_plain/refs/heads/lamp:/stack/lamp.cfg?js=1
@@ -20,15 +19,6 @@ url = http://downloads.sourceforge.net/project/openemr/OpenEMR%20Current/4.1.0/o
 md5sum = 4311688c25e991825584ad529b553396
 #If provided tarball does not contain top directory, option shall be changed to false
 strip-top-level-dir = true
-
-[configure-script]
-recipe = hexagonit.recipe.download
-location = ${buildout:parts-directory}/${:_buildout_section_name_}
-url = https://gitorious.org/~mmbengue/slapos/mohamadous-slapos/blobs/raw/master/software/openemr/configure-openemr.py
-md5sum = cfb305e0fd2b996f8bfe4302dd6b6288
-filename = configure-openemr.py
-download-only = True
-mode = 0744
 
 [application-template]
 recipe = slapos.recipe.download
@@ -57,10 +47,7 @@ mode = 0644
 [instance-recipe-egg]
 recipe = zc.recipe.egg
 python = python2.7
-eggs =
-    ${mysql-python:egg}
-    ${instance-recipe:egg}
-    slapos.toolbox[lampconfigure]
+eggs = ${instance-recipe:egg}
 
 [versions]
 # Use SlapOS patched zc.buildout
