@@ -91,26 +91,7 @@ class Recipe(GenericBaseRecipe):
         self.logger.debug('Created link %r -> %r', link, repository_path)
         # Always provide a URL-Type
         append("file://" + link)
-
-    # Generate Zeo connections
-    zeo_snippet_template = open(self.getTemplateFilename('zope.zeo.entry.conf.in'
-      )).read()
-    zeo_snippet_list = []
-    for zeo_line in self.options['zeo-connection-string'].splitlines():
-      zeo_line.strip()
-      if not zeo_line:
-        continue
-      d = dict()
-      for param in zeo_line.split():
-        k, v = param.split('=')
-        d[k.strip()] = v.strip()
-      zeo_snippet_list.append(zeo_snippet_template % d)
     # Create zope configuration file
-    zope_config = dict(
-        products=self.options['products'],
-        thread_amount=self.options['thread-amount'],
-        zodb_configuration='\n'.join(zeo_snippet_list)
-    )
     zope_environment = dict(
       TMP=self.options['tmp-path'],
       TMPDIR=self.options['tmp-path'],
@@ -135,26 +116,30 @@ class Recipe(GenericBaseRecipe):
     # file ?
     shutil.copy(self.getTemplateFilename('site.zcml'),
       self.options['site-zcml'])
-    zope_config['instance'] = self.options['instance-path']
-    zope_config['event_log'] = self.options['event-log']
-    zope_config['z2_log'] = self.options['z2-log']
-    zope_config['pid-filename'] = self.options['pid-file']
-    zope_config['lock-filename'] = self.options['lock-file']
-    prefixed_products = []
-    for product in reversed(zope_config['products'].split()):
-      product = product.strip()
-      if product:
-        prefixed_products.append('products %s' % product)
+    prefixed_products = ['products ' + x.strip()
+      for x in reversed(self.options['products'].split()) if x.strip()]
     prefixed_products.insert(0, 'products %s' % self.options[
       'instance-products'])
-    zope_config['products'] = '\n'.join(prefixed_products)
-    zope_config['address'] = '%s:%s' % (self.options['ip'], self.options['port'])
-    zope_config.update(dump_url=self.options['deadlock-path'],
-      secret=self.options['deadlock-password'])
-
-    zope_wrapper_template_location = self.getTemplateFilename('zope.conf.in')
-    zope_conf_content = self.substituteTemplate(zope_wrapper_template_location,
-      zope_config)
+    zeo_snippet_template = open(self.getTemplateFilename('zope.zeo.entry.conf.in'
+      )).read()
+    zope_conf_content = self.substituteTemplate(self.getTemplateFilename('zope.conf.in'), {
+      'thread_amount': self.options['thread-amount'],
+      # XXX: why use ad-hoc parsing when there is json ?
+      'zodb_configuration': '\n'.join(
+        zeo_snippet_template % dict((y.strip() for y in x.split('=', 1))
+          for x in zeo_line.split())
+        for zeo_line in self.options['zeo-connection-string'].splitlines()
+      ),
+      'instance': self.options['instance-path'],
+      'event_log': self.options['event-log'],
+      'z2_log': self.options['z2-log'],
+      'pid-filename': self.options['pid-file'],
+      'lock-filename': self.options['lock-file'],
+      'address': '%s:%s' % (self.options['ip'], self.options['port']),
+      'dump_url': self.options['deadlock-path'],
+      'secret': self.options['deadlock-password'],
+      'products': '\n'.join(prefixed_products),
+    })
     if self.isTrueValue(self.options['timeserver']):
       zope_conf_content += self.substituteTemplate(self.getTemplateFilename(
           'zope.conf.timeserver.in'), {})
