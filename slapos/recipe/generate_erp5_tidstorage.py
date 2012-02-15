@@ -134,9 +134,8 @@ class Recipe(GenericSlapRecipe):
         part_list.append('logrotate-entry-' + part_name)
         longrequest_logger = backend_configuration.get("longrequest-logger")
         if longrequest_logger is not None:
-          longrequest_part_name = '%s-longrequest' %part_name 
-          longrequest_logger_file = '${basedirectory:log}/%s.log' \
-                                      %longrequest_part_name
+          longrequest_logger_file = '${basedirectory:log}/' + part_name + \
+            '-longrequest.log'
           longrequest_logger_timeout = longrequest_logger.get('timeout', '4')
           longrequest_logger_interval = longrequest_logger.get('interval', '2')
         else:
