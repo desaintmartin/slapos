@@ -51,7 +51,6 @@ class Recipe(GenericBaseRecipe):
     (until everything is integrated into the ZODB).
     So, do not request zope instance and create multiple in the same partition.
     """
-    path_list = []
     Zope2InitUser(self.options['inituser'], self.options['user'],
       self.options['password'])
 
@@ -132,6 +131,8 @@ class Recipe(GenericBaseRecipe):
                longrequestlogger_interval = longrequest_logger_interval))
 
     # configure default Zope2 zcml
+    # XXX: shouldn't self.options['site-zcml'] be returned, as we created this
+    # file ?
     open(self.options['site-zcml'], 'w').write(open(self.getTemplateFilename(
         'site.zcml')).read())
     zope_config['instance'] = self.options['instance-path']
@@ -159,7 +160,12 @@ class Recipe(GenericBaseRecipe):
           'zope.conf.timeserver.in'), {})
 
     zope_conf_path = self.createFile(self.options['configuration-file'], zope_conf_content)
-    path_list.append(zope_conf_path)
-    # Create init script
-    path_list.append(self.createPythonScript(self.options['wrapper'], 'slapos.recipe.librecipe.execute.executee', [[self.options['runzope-binary'].strip(), '-C', zope_conf_path], zope_environment]))
-    return path_list
+    return [
+      zope_conf_path,
+      self.createPythonScript(self.options['wrapper'],
+        'slapos.recipe.librecipe.execute.executee', [
+          [self.options['runzope-binary'].strip(), '-C', zope_conf_path],
+          zope_environment,
+        ]
+      )
+    ]
