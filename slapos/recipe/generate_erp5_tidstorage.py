@@ -132,7 +132,7 @@ class Recipe(GenericSlapRecipe):
         part_name = 'zope-%s-%s' % (backend_name, q)
         part_list.append(part_name)
         part_list.append('logrotate-entry-' + part_name)
-        longrequest_logger = backend_configuration.get("longrequest-logger", None)
+        longrequest_logger = backend_configuration.get("longrequest-logger")
         if longrequest_logger is not None:
           longrequest_part_name = '%s-longrequest' %part_name 
           longrequest_logger_file = '${basedirectory:log}/%s.log' \
