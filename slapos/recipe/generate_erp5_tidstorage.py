@@ -171,7 +171,7 @@ class Recipe(GenericSlapRecipe):
     output += '\n'.join(publish_url_list)
     part_list.append('publish-apache-backend-list')
     prepend = open(self.options['snippet-master']).read() % dict(
-        part_list='  \n'.join(['  '+q for q in part_list]),
+        part_list='\n  '.join(part_list),
         known_tid_storage_identifier_dict=known_tid_storage_identifier_dict,
         haproxy_section="haproxy-" + backend_name,
         zope_section=zope_id,
