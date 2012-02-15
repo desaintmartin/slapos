@@ -99,7 +99,7 @@ class Recipe(GenericSlapRecipe):
     snippet_zope = open(self.options['snippet-zope']).read()
     zope_id = 'zope-distribution'
     part_list.append(zope_id)
-    part_list.append('logrotate-entry-%s' % zope_id)
+    part_list.append('logrotate-entry-' + zope_id)
     output += snippet_zope % dict(zope_thread_amount=1, zope_id=zope_id,
       zope_port=current_zope_port, zope_timeserver=True, 
       longrequest_logger_file='', longrequest_logger_timeout='', 
@@ -108,7 +108,7 @@ class Recipe(GenericSlapRecipe):
     current_zope_port += 1
     zope_id = 'zope-admin'
     part_list.append(zope_id)
-    part_list.append('logrotate-entry-%s' % zope_id)
+    part_list.append('logrotate-entry-' + zope_id)
     output += snippet_zope % dict(zope_thread_amount=1, zope_id=zope_id,
       zope_port=current_zope_port, zope_timeserver=False, 
       longrequest_logger_file='', longrequest_logger_timeout='', 
@@ -118,7 +118,7 @@ class Recipe(GenericSlapRecipe):
       current_zope_port += 1
       part_name = 'zope-activity-%s' % q
       part_list.append(part_name)
-      part_list.append('logrotate-entry-%s' % part_name)
+      part_list.append('logrotate-entry-' + part_name)
       output += snippet_zope % dict(zope_thread_amount=1, zope_id=part_name,
         zope_port=current_zope_port, zope_timeserver=True,
         longrequest_logger_file='', longrequest_logger_timeout='', 
@@ -132,7 +132,7 @@ class Recipe(GenericSlapRecipe):
         current_zope_port += 1
         part_name = 'zope-%s-%s' % (backend_name, q)
         part_list.append(part_name)
-        part_list.append('logrotate-entry-%s' % part_name)
+        part_list.append('logrotate-entry-' + part_name)
         longrequest_logger = backend_configuration.get("longrequest-logger", None)
         if longrequest_logger is not None:
           longrequest_part_name = '%s-longrequest' %part_name 
@@ -173,7 +173,7 @@ class Recipe(GenericSlapRecipe):
     prepend = open(self.options['snippet-master']).read() % dict(
         part_list='  \n'.join(['  '+q for q in part_list]),
         known_tid_storage_identifier_dict=known_tid_storage_identifier_dict,
-        haproxy_section="haproxy-%s" % backend_name,
+        haproxy_section="haproxy-" + backend_name,
         zope_section=zope_id,
         site_id=site_id,
         **self.parameter_dict
@@ -193,6 +193,6 @@ class Recipe(GenericSlapRecipe):
       try:
         self._generateRealTemplate()
       except Exception:
-        print 'Ignored issue during template generation:\n%s' % \
-          traceback.format_exc()
+        print 'Ignored issue during template generation:'
+        print traceback.format_exc()
     return [self.dirname]
