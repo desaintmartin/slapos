@@ -52,7 +52,6 @@ class Recipe(GenericSlapRecipe):
     # prepare zeo
     output = ''
     part_list = []
-    zope_dict = {}
     zope_connection_dict = {}
     known_tid_storage_identifier_dict = {}
     snippet_zeo = open(self.options['snippet-zeo']).read()
@@ -84,16 +83,16 @@ class Recipe(GenericSlapRecipe):
         "zeo-instance-%s" % zeo_id,
         "logrotate-entry-zeo-%s" % zeo_id
       ])
-
-    zeo_connection_list = []
-    a = zeo_connection_list.append
-    for k, v in zope_connection_dict.iteritems():
-      a('  zeo-cache-size=%(zeo-cache-size)s zope-cache-size=%(zope-cache-size)s server=%(server)s mount-point=%(mount-point)s storage-name=%(storage-name)s' % v)
-    zeo_connection_string = '\n'.join(zeo_connection_list)
-    zope_dict.update(
-      timezone=json_data['timezone'],
-      zeo_connection_string=zeo_connection_string
-    )
+    zope_dict = {
+      'timezone': json_data['timezone'],
+      # XXX: use json
+      'zeo_connection_string': '\n'.join(
+          '  zeo-cache-size=%(zeo-cache-size)s '
+          'zope-cache-size=%(zope-cache-size)s server=%(server)s '
+          'mount-point=%(mount-point)s storage-name=%(storage-name)s' % v
+          for v in zope_connection_dict.itervalues()
+        )
+    }
     # always one distribution node
     current_zope_port += 1
     snippet_zope = open(self.options['snippet-zope']).read()
