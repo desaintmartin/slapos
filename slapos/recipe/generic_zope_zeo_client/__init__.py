@@ -120,18 +120,16 @@ class Recipe(GenericBaseRecipe):
     )
 
     # longrequestlogger product which requires environment settings
-    longrequest_logger_file = self.options.get('longrequest-logger-file', None)
-    longrequest_logger_timeout = \
-      self.options.get('longrequest-logger-timeout', None)
-    longrequest_logger_interval= \
-      self.options.get('longrequest-logger-interval', None)
+    longrequest_logger_file = self.options.get('longrequest-logger-file')
     if longrequest_logger_file:
       # add needed zope configuration
       zope_environment.update(
-        **dict(longrequestlogger_file = longrequest_logger_file,
-               longrequestlogger_timeout = longrequest_logger_timeout,
-               longrequestlogger_interval = longrequest_logger_interval))
-
+        longrequestlogger_file=longrequest_logger_file,
+        longrequestlogger_timeout=self.options.get(
+          'longrequest-logger-timeout'),
+        longrequestlogger_interval=self.options.get(
+          'longrequest-logger-interval'),
+      )
     # configure default Zope2 zcml
     # XXX: shouldn't self.options['site-zcml'] be returned, as we created this
     # file ?
