@@ -36,10 +36,13 @@ _isurl = re.compile('([a-zA-Z0-9+.-]+)://').match
 
 # based on Zope2.utilities.mkzopeinstance.write_inituser
 def Zope2InitUser(path, username, password):
-  open(path, 'w').write('')
-  os.chmod(path, 0600)
-  open(path, "w").write('%s:{SHA}%s\n' % (
-    username,binascii.b2a_base64(hashlib.sha1(password).digest())[:-1]))
+  umask = os.umask(0077)
+  try:
+    # XXX: Why not using safer SSHA ?
+    open(path, 'w').write('%s:{SHA}%s\n' % (
+      username, binascii.b2a_base64(hashlib.sha1(password).digest())[:-1]))
+  finally:
+    os.umask(umask)
 
 class Recipe(GenericBaseRecipe):
   def _options(self, options):
