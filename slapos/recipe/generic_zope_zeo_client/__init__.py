@@ -28,11 +28,9 @@ from slapos.recipe.librecipe import GenericBaseRecipe
 import binascii
 import hashlib
 import os
-import re
 import shutil
+import urllib
 import zc.buildout
-
-_isurl = re.compile('([a-zA-Z0-9+.-]+)://').match
 
 # based on Zope2.utilities.mkzopeinstance.write_inituser
 def Zope2InitUser(path, username, password):
@@ -66,34 +64,29 @@ class Recipe(GenericBaseRecipe):
     # read-only repository.
     repository_path = self.options['bt5-repository']
 
-    self.bt5_repository_list = []
-    append = self.bt5_repository_list.append
     for repository in self.options.get('bt5-repository-list', '').split():
       repository = repository.strip()
       if not repository:
         continue
-
-      if repository[:7] == 'file://':
-        repository = repository[7:]
-      elif _isurl(repository):
-        # XXX: assume it's a valid URL
-        append(repository)
+      scheme, path = urllib.splittype(repository)
+      if scheme is None:
+        # Assume it's a native path.
+        pass
+      elif scheme == 'file':
+        path = urllib.url2pathname(urllib.splithost(path)[1])
+      else:
+        # Nothing to do for non-local schemes
         continue
-
-      # XXX: it is invalid to apply os.path methods on an URL.
-      #      Hint: urllib.url2pathname
-      if os.path.isabs(repository):
-        repo_id = hashlib.sha1(repository).hexdigest()
-        link = os.path.join(repository_path, repo_id)
+      if os.path.isabs(path):
+        link = os.path.join(repository_path,
+          hashlib.sha1(path).hexdigest())
         if os.path.lexists(link):
           if not os.path.islink(link):
             raise zc.buildout.UserError(
               'Target link already %r exists but it is not link' % link)
           os.unlink(link)
-        os.symlink(repository, link)
+        os.symlink(path, link)
         self.logger.debug('Created link %r -> %r', link, repository_path)
-        # Always provide a URL-Type
-        append("file://" + link)
     # Create zope configuration file
     zope_environment = {
       'TMP': self.options['tmp-path'],
