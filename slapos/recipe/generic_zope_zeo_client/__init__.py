@@ -87,7 +87,7 @@ class Recipe(GenericBaseRecipe):
               'Target link already %r exists but it is not link' % link)
           os.unlink(link)
         os.symlink(repository, link)
-        self.logger.debug('Created link %r -> %r' % (link, repository_path))
+        self.logger.debug('Created link %r -> %r', link, repository_path)
         # Always provide a URL-Type
         append("file://" + link)
 
