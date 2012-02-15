@@ -25,17 +25,14 @@ TypesConfig conf/mime.types
 AddType application/x-compress .Z
 AddType application/x-gzip .gz .tgz
 
+ServerTokens Prod
+ServerSignature Off
+TraceEnable Off
+
 # As backend is trusting REMOTE_USER header unset it always
 RequestHeader unset REMOTE_USER
 
-# SSL Configuration
-SSLEngine on
-SSLCertificateFile %(certificate)s
-SSLCertificateKeyFile %(key)s
-SSLRandomSeed startup builtin
-SSLRandomSeed connect builtin
-
-SSLProxyEngine On
+%(ssl_snippet)s
 
 # Log configuration
 ErrorLog "%(error_log)s"
