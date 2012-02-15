@@ -177,8 +177,8 @@ class Recipe(GenericSlapRecipe):
         site_id=site_id,
         **self.parameter_dict
         )
-    output = prepend + output
     with open(self.options['output'], 'w') as f:
+      f.write(prepend)
       f.write(output)
 
   def _install(self):
