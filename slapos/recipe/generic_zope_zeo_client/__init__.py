@@ -69,14 +69,15 @@ class Recipe(GenericBaseRecipe):
       if not repository:
         continue
 
-      if _isurl(repository) and not repository.startswith("file://"):
+      if repository[:7] == 'file://':
+        repository = repository[7:]
+      elif _isurl(repository):
         # XXX: assume it's a valid URL
         append(repository)
         continue
 
-      if repository.startswith('file://'):
-        repository = repository.replace('file://', '', '')
-
+      # XXX: it is invalid to apply os.path methods on an URL.
+      #      Hint: urllib.url2pathname
       if os.path.isabs(repository):
         repo_id = hashlib.sha1(repository).hexdigest()
         link = os.path.join(repository_path, repo_id)
