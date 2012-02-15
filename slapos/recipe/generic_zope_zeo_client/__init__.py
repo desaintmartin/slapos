@@ -29,6 +29,7 @@ import binascii
 import hashlib
 import os
 import re
+import shutil
 import zc.buildout
 
 _isurl = re.compile('([a-zA-Z0-9+.-]+)://').match
@@ -134,8 +135,8 @@ class Recipe(GenericBaseRecipe):
     # configure default Zope2 zcml
     # XXX: shouldn't self.options['site-zcml'] be returned, as we created this
     # file ?
-    open(self.options['site-zcml'], 'w').write(open(self.getTemplateFilename(
-        'site.zcml')).read())
+    shutil.copy(self.getTemplateFilename('site.zcml'),
+      self.options['site-zcml'])
     zope_config['instance'] = self.options['instance-path']
     zope_config['event_log'] = self.options['event-log']
     zope_config['z2_log'] = self.options['z2-log']
