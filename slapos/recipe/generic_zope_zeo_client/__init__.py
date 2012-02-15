@@ -92,14 +92,13 @@ class Recipe(GenericBaseRecipe):
         # Always provide a URL-Type
         append("file://" + link)
     # Create zope configuration file
-    zope_environment = dict(
-      TMP=self.options['tmp-path'],
-      TMPDIR=self.options['tmp-path'],
-      HOME=self.options['tmp-path'],
-      PATH=self.options['bin-path'],
-      TIMEZONE=self.options['timezone'],
-    )
-
+    zope_environment = {
+      'TMP': self.options['tmp-path'],
+      'TMPDIR': self.options['tmp-path'],
+      'HOME': self.options['tmp-path'],
+      'PATH': self.options['bin-path'],
+      'TIMEZONE': self.options['timezone'],
+    }
     # longrequestlogger product which requires environment settings
     longrequest_logger_file = self.options.get('longrequest-logger-file')
     if longrequest_logger_file:
